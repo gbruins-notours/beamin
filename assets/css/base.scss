@@ -1,0 +1,37 @@
+@charset "UTF-8";
+
+@import "components/normalize";
+@import "components/variables";
+@import "components/objects";
+
+html {
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    min-width: 300px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    text-rendering: optimizeLegibility;
+  }
+
+html,
+body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background-color: #fafafa;
+}
+
+body {
+    color: $colorGrayDarker;
+    font-size: 16px;
+    font-weight: $weight-normal;
+    line-height: 1.5;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+    font-family: $family-sans-serif
+}
