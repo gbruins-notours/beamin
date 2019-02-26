@@ -1,10 +1,17 @@
 <script>
 import Vue from 'vue';
-import { Input, Button } from 'element-ui';
+import { Input, Button, Dialog, Loading } from 'element-ui';
+import Validations from 'vuelidate';
+import { email, required } from 'vuelidate/lib/validators';
 import Logo from '@/components/Logo.vue';
 
 Vue.use(Input);
 Vue.use(Button);
+Vue.use(Dialog);
+Vue.use(Validations);
+Vue.use(Loading.directive);
+
+const touchMap = new WeakMap();
 
 export default {
     components: {
@@ -13,7 +20,77 @@ export default {
 
     data: function() {
         return {
-            emailAddress: null
+            form: {
+                email: null
+            },
+            successDialogVisible: false,
+            loading: false
+        };
+    },
+
+    methods: {
+        signIn() {
+            return new Promise((resolve, reject) => {
+                this.$fireAuth.onAuthStateChanged(user => {
+                    if (user) {
+                        // User is signed in.
+                        // var isAnonymous = user.isAnonymous;
+                        // var uid = user.uid;
+                        resolve(user);
+                    } else {
+                        reject(new Error('User does not exist'));
+                    }
+                });
+
+                this.$fireAuth.signInAnonymously().catch(error => {
+                    // let errorCode = error.code;
+                    // let errorMessage = error.message;
+                    alert(error);
+                    reject(error);
+                });
+            });
+        },
+
+        async writeToFirestore() {
+            try {
+                this.loading = true;
+
+                await this.signIn();
+
+                const messageRef = this.$fireStore
+                    .collection('signups')
+                    .doc(this.form.email);
+
+                await messageRef.set({
+                    created: new Date(),
+                    customer: this.form.email
+                });
+
+                this.successDialogVisible = true;
+                this.form.email = null;
+            } catch (e) {
+                alert(e);
+            }
+
+            this.loading = false;
+        },
+
+        delayTouch($v) {
+            $v.$reset();
+
+            if (touchMap.has($v)) {
+                clearTimeout(touchMap.get($v));
+            }
+
+            touchMap.set($v, setTimeout($v.$touch, 1000));
+        }
+    },
+
+    validations: function() {
+        return {
+            form: {
+                email: { required, email }
+            }
         };
     }
 };
@@ -22,7 +99,7 @@ export default {
 
 <template>
     <section class="container">
-        <div class="main-intro">
+        <div class="main-intro" v-loading="loading">
             <header>
                 <logo />
             </header>
@@ -30,24 +107,45 @@ export default {
             <div class="main-content">
                 <div class="headline">
                     <h1>Nice to meet you</h1>
-                    <div class="spacer">We are preparing something amazing and exciting for you. Special surprise for our subscribers only.</div>
+                    <div class="spacer">
+                        We are preparing something amazing and exciting for you. Special surprise for our subscribers only.
+                    </div>
                 </div>
 
                 <div class="spacer">
                     <el-input
+                        v-model="form.email"
                         :placeholder="$t('Email address')"
-                        v-model="emailAddress"
-                        size="medium" />
+                        :class="{ 'inputError': $v.form.email.$error }"
+
+                        @change="delayTouch($v.form.email)" />
+
+                    <div
+                        role="alert"
+                        v-show="$v.form.email.$dirty"
+                        class="colorPink fs14">
+                        <div v-if="!$v.form.email.email">{{ $t('Please enter a valid email address.') }}</div>
+                    </div>
                 </div>
 
                 <div class="spacer">
-                    <el-button>{{ $t('Submit') }}</el-button>
+                    <el-button
+                        @click="writeToFirestore"
+                        :disabled="$v.form.$invalid">{{ $t('Submit') }}</el-button>
                 </div>
             </div>
         </div>
+
         <div class="main-media">
             <div class="image" style="background-image:url(/images/wieber.jpg)" />
         </div>
+
+        <el-dialog
+            :title="$t('Thanks!')"
+            :visible.sync="successDialogVisible"
+            width="50%">
+            <span>This is a message</span>
+        </el-dialog>
     </section>
 </template>
 
@@ -104,11 +202,16 @@ export default {
         }
 
         .el-button {
-            background: #ed2189;
+            background: rgb(237, 33, 137);
             color: #fff;
             border: 0;
             padding: 15px 30px;
             @include grow();
+
+            &.is-disabled {
+                background: rgb(117, 115, 116);
+                color: rgb(179, 174, 176);
+            }
         }
 
         .el-button:hover {
@@ -139,6 +242,10 @@ export default {
     background-position: top center;
     @include background-size(cover);
 }
+
+// .inputError input {
+//     border-color: red !important;
+// }
 
 @media #{$medium-and-up} {
     .container {

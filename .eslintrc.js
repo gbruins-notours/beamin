@@ -24,6 +24,8 @@ module.exports = {
         'no-debugger': process.env.NODE_ENV === 'production' ? ERROR : OFF,
         'vue/html-indent': 4,
         'vue/attributes-order': OFF,
-        'vue/html-closing-bracket-newline': OFF
+        'vue/html-closing-bracket-newline': OFF,
+        'vue/singleline-html-element-content-newline': OFF,
+        'vue/multiline-html-element-content-newline': OFF
     }
 }

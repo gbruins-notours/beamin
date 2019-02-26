@@ -1,4 +1,8 @@
-const pkg = require('./package')
+const pkg = require('./package');
+
+if (process.env.NODE_ENV === 'development') {
+    require('dotenv').config();
+}
 
 module.exports = {
     mode: 'universal',
@@ -43,8 +47,33 @@ module.exports = {
     modules: [
         // Doc: https://axios.nuxtjs.org/usage
         '@nuxtjs/axios',
-        '@nuxtjs/pwa'
+        '@nuxtjs/pwa',
+        'nuxt-fire'
     ],
+
+    // Nuxt-Fire Module Options
+    fire: {
+        // useOnly: ['auth', 'firestore', 'functions', 'storage', 'realtimeDb'],
+        useOnly: ['auth', 'firestore'],
+        config: {
+            development: {
+                apiKey: process.env.FIREBASE_API_KEY,
+                authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+                databaseURL: process.env.FIREBASE_DATABASE_URL,
+                projectId: process.env.FIREBASE_PROJECT_ID,
+                storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+                messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID
+            },
+            production: {
+                apiKey: process.env.FIREBASE_API_KEY,
+                authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+                databaseURL: process.env.FIREBASE_DATABASE_URL,
+                projectId: process.env.FIREBASE_PROJECT_ID,
+                storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+                messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID
+            }
+        }
+    },
 
     /*
     ** Axios module configuration

@@ -1,5 +1,9 @@
 {
     "Email address": "Email address",
 
-    "Submit": "Submit"
+    "Please enter a valid email address.": "Please enter a valid email address.",
+
+    "Submit": "Submit",
+
+    "Thanks!": "Thanks!"
 }
