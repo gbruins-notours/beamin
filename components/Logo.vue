@@ -18,7 +18,7 @@
     display: inline-block;
     position: relative;
     overflow: hidden;
-    width: 175px;
+    width: 250px;
     margin-bottom: -6px;
 }
 </style>

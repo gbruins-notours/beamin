@@ -100,19 +100,20 @@ export default {
 <template>
     <section class="container">
         <div class="main-intro" v-loading="loading">
-            <header>
+            <header class="tac">
                 <logo />
             </header>
 
-            <div class="main-content">
+            <div class="main-content tac">
                 <div class="headline">
-                    <h1>Nice to meet you</h1>
-                    <div class="spacer">
-                        We are preparing something amazing and exciting for you. Special surprise for our subscribers only.
-                    </div>
+                    <h1>Finally</h1>
+                    <div>An apparel brand built exclusively for gymnasts.</div>
+                    <div>Join us as we build GMNST lifestyle apparel!</div>
                 </div>
 
                 <div class="spacer">
+                    <div class="colorWhite mbs fs20">Sign Up For Your Early Access Invite:</div>
+
                     <el-input
                         v-model="form.email"
                         :placeholder="$t('Email address')"
@@ -183,7 +184,7 @@ export default {
         @include flexbox();
         @include flex-direction(column);
         @include justify-content(center);
-        margin-top: -150px;
+        margin-top: -125px;
         padding: 50px;
         // @include align-items(center);
         // @include justify-content(center);
@@ -194,7 +195,7 @@ export default {
             color: #fff;
 
             h1 {
-                font-size: 50px;
+                font-size: 45px;
                 font-weight: 600;
                 margin: 0;
                 line-height: 50px;
@@ -219,7 +220,7 @@ export default {
         }
 
         input {
-            width: 300px;
+            width: 400px;
         }
     }
 }
