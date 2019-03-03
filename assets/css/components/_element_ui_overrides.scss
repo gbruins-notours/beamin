@@ -24,6 +24,10 @@
     @include growHover()
 }
 
+.el-input__inner::placeholder {
+    color: #999;
+}
+
 @media #{$small-and-down} {
     .el-notification {
         right: auto;
