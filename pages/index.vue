@@ -336,7 +336,7 @@ export default {
         </div>
 
         <div class="main-media" v-if="viewIndex === 1">
-            <div class="image" style="background-image:url(/images/wieber.jpg)" />
+            <div class="image" style="background-image:url(/images/shirts.jpg)" />
         </div>
     </section>
 </template>
