@@ -1,7 +1,10 @@
+const path = require('path')
 const pkg = require('./package');
 
 if (process.env.NODE_ENV === 'development') {
-    require('dotenv').config();
+    require('dotenv').config({
+        path: path.resolve(__dirname, '../.env')
+    });
 }
 
 module.exports = {
@@ -11,11 +14,11 @@ module.exports = {
     ** Headers of the page
     */
     head: {
-        title: pkg.name,
+        title: 'GMNST',
         meta: [
             { charset: 'utf-8' },
             { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-            { hid: 'description', name: 'description', content: pkg.description }
+            { hid: 'description', name: 'description', content: "Gymnastics Lifestyle apparel" }
         ],
         link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
     },
@@ -47,14 +50,14 @@ module.exports = {
     modules: [
         // Doc: https://axios.nuxtjs.org/usage
         '@nuxtjs/axios',
-        '@nuxtjs/pwa',
-        'nuxt-fire'
+        'nuxt-fire',
+        ['@nuxtjs/pwa', { oneSignal: false }]
     ],
 
     // Nuxt-Fire Module Options
     fire: {
         // useOnly: ['auth', 'firestore', 'functions', 'storage', 'realtimeDb'],
-        useOnly: ['auth', 'firestore'],
+        useOnly: ['auth', 'firestore', 'functions'],
         config: {
             development: {
                 apiKey: process.env.FIREBASE_API_KEY,
@@ -82,6 +85,10 @@ module.exports = {
         // See https://github.com/nuxt-community/axios-module#options
     },
 
+    generate: {
+        dir: '../build'
+    },
+
     /*
     ** Build configuration
     */
@@ -102,5 +109,10 @@ module.exports = {
                 })
             }
         }
+    },
+
+    transition: {
+        name: 'fade',
+        mode: 'out-in'
     }
 }
