@@ -57,7 +57,7 @@ module.exports = {
     // Nuxt-Fire Module Options
     fire: {
         // useOnly: ['auth', 'firestore', 'functions', 'storage', 'realtimeDb'],
-        useOnly: ['auth', 'firestore', 'functions'],
+        useOnly: ['auth', 'firestore'],
         config: {
             development: {
                 apiKey: process.env.FIREBASE_API_KEY,

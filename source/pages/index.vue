@@ -80,6 +80,22 @@ export default {
                 });
 
                 this.viewIndex = 2;
+
+                // const sendWelcomeEmail = this.$fireFunc.httpsCallable(
+                //     'sendWelcomeEmail'
+                // );
+                // const res1 = await sendWelcomeEmail({
+                //     email: this.form.email
+                // });
+                // console.log('sendWelcomeEmail', res1.data);
+
+                // const sendWelcomeNotificationToAdmin = this.$fireFunc.httpsCallable(
+                //     'sendWelcomeNotificationToAdmin'
+                // );
+                // const res2 = await sendWelcomeNotificationToAdmin({
+                //     email: this.form.email
+                // });
+                // console.log('sendWelcomeNotificationToAdmin', res2.data);
             } catch (e) {
                 alert(e);
             }
