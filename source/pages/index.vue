@@ -51,14 +51,17 @@ export default {
                         // var uid = user.uid;
                         resolve(user);
                     } else {
-                        reject(new Error('User does not exist'));
+                        resolve();
+                        // User is signed out.
+                    //     reject(new Error('User does not exist'));
                     }
                 });
 
                 this.$fireAuth.signInAnonymously().catch(error => {
                     // let errorCode = error.code;
                     // let errorMessage = error.message;
-                    alert(error);
+                    console.log("SIGNIN FAILED", error.message);
+                    // alert(error);
                     reject(error);
                 });
             });
