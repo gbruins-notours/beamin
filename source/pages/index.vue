@@ -37,7 +37,7 @@ export default {
                 country: 'US'
             },
             loading: false,
-            viewIndex: 3,
+            viewIndex: 1,
             anonymousUser: null
         };
     },
