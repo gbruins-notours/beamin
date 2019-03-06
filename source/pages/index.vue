@@ -37,41 +37,63 @@ export default {
                 country: 'US'
             },
             loading: false,
-            viewIndex: 1
+            viewIndex: 3,
+            anonymousUser: null
         };
     },
 
-    methods: {
-        signIn() {
-            return new Promise((resolve, reject) => {
-                this.$fireAuth.onAuthStateChanged(user => {
-                    if (user) {
-                        // User is signed in.
-                        // var isAnonymous = user.isAnonymous;
-                        // var uid = user.uid;
-                        resolve(user);
-                    } else {
-                        resolve();
-                        // User is signed out.
-                    //     reject(new Error('User does not exist'));
-                    }
-                });
+    created: async function() {
+        await this.signIn();
+    },
 
-                this.$fireAuth.signInAnonymously().catch(error => {
-                    // let errorCode = error.code;
-                    // let errorMessage = error.message;
-                    console.log("SIGNIN FAILED", error.message);
-                    // alert(error);
-                    reject(error);
-                });
-            });
+    methods: {
+        // async signIn() {
+        //     return new Promise((resolve, reject) => {
+        //         // this.$fireAuth.onAuthStateChanged(user => {
+        //         //     if (user) {
+        //         //         // User is signed in.
+        //         //         // var isAnonymous = user.isAnonymous;
+        //         //         // var uid = user.uid;
+        //         //         resolve(user);
+        //         //     } else {
+        //         //         // User is signed out.
+        //         //         reject(new Error('User does not exist'));
+        //         //     }
+        //         // });
+
+        //         // this.$fireAuth.signInAnonymously().catch(error => {
+        //         //     // let errorCode = error.code;
+        //         //     // let errorMessage = error.message;
+        //         //     console.log('SIGNIN FAILED', error.message);
+        //         //     // alert(error);
+        //         //     reject(error);
+        //         // });
+        //         try {
+        //             this.anonymousUser = await this.$fireAuth.signInAnonymously();
+        //         } catch(error) {
+        //             console.error(error);
+        //             this.anonymousUser = null;
+        //         }
+        //     });
+        // },
+
+        async signIn() {
+            try {
+                this.anonymousUser = await this.$fireAuth.signInAnonymously();
+                return;
+            } catch (error) {
+                console.error(error);
+                this.anonymousUser = null;
+            }
         },
 
         async writeToFirestore() {
             try {
                 this.loading = true;
 
-                await this.signIn();
+                if (!this.anonymousUser) {
+                    await this.signIn();
+                }
 
                 const messageRef = this.$fireStore
                     .collection('signups')
@@ -100,7 +122,8 @@ export default {
                 // });
                 // console.log('sendWelcomeNotificationToAdmin', res2.data);
             } catch (e) {
-                alert(e);
+                // alert(e);
+                console.error(e);
             }
 
             this.loading = false;
@@ -200,6 +223,7 @@ export default {
                     </div>
 
                     <el-input
+                        type="email"
                         v-model="form.email"
                         :placeholder="$t('Your Email Address')"
                         :class="{ 'inputError': $v.form.email.$error }"
@@ -235,7 +259,7 @@ export default {
                     </div>
                 </div>
 
-                <div class="mtl displayTable fs14 mha">
+                <div class="stickerForm">
                     <!-- name -->
                     <div class="formRow">
                         <label>{{ $t('Your name') }}:</label>
@@ -457,6 +481,12 @@ export default {
         max-width: 400px;
     }
 
+    .stickerForm {
+        display: table;
+        margin: 30px auto 0 auto;
+        font-size: 16px;
+    }
+
     .el-button {
         background: rgb(237, 33, 137);
         color: #fff;
@@ -490,42 +520,10 @@ export default {
     @include background-size(cover);
 }
 
-@media #{$medium-and-down} {
-    .container {
-        @include flex-direction(column);
-    }
-
-    .main-intro {
-        font-size: 16px;
-
-        header {
-            margin: 20px 0;
-
-            .gmnstLogo {
-                width: 200px;
-            }
-        }
-
-        .step {
-            padding: 10px;
-
-            .headline {
-                line-height: 20px;
-
-                h1 {
-                    font-size: 30px;
-                    line-height: 35px;
-                }
-            }
-        }
-    }
-}
-
 .formRow {
     display: table-row;
 
     > label {
-        font-weight: bold;
         padding: 0 10px 10px 0;
         display: table-cell;
     }
@@ -536,31 +534,12 @@ export default {
     }
 }
 
-@media #{$small-and-down} {
-    .formRow {
-        display: block;
-
-        > label,
-        > span {
-            display: block;
-        }
-
-        > label {
-            padding: 0;
-        }
-
-        > span {
-            padding: 0 0 10px 0;
-        }
-    }
-}
-
 .inputError {
     border-color: red;
 }
 
 .animation-container {
-    padding-top: 100px;
+    padding-top: 30px;
 }
 
 .animation-wrapper {
@@ -608,8 +587,9 @@ export default {
     width: 90px;
     height: 26px;
     animation-name: victoryLap;
-    animation-duration: 20s;
-    animation-delay: 0.3s;
+    // animation-duration: 20s;
+    animation-duration: 15s;
+    // animation-delay: 0.3s;
     animation-timing-function: ease;
     animation-iteration-count: infinite;
 }
@@ -617,7 +597,101 @@ export default {
 .road {
     position: relative;
     bottom: -28px;
-    background-color: rgba(0, 0, 0, 0.1);
+    // background-color: rgba(0, 0, 0, 0.1);
     height: 20px;
+}
+
+@media #{$medium-and-down} {
+    .container {
+        @include flex-direction(column);
+    }
+
+    .main-intro {
+        font-size: 16px;
+
+        header {
+            margin: 20px 0;
+
+            .gmnstLogo {
+                width: 200px;
+            }
+        }
+
+        .step {
+            padding: 10px;
+
+            .headline {
+                line-height: 20px;
+
+                h1 {
+                    font-size: 30px;
+                    line-height: 35px;
+                }
+            }
+        }
+    }
+}
+
+@media #{$small-and-down} {
+    .main-intro {
+        h1 {
+            font-size: 30px;
+        }
+
+        .step {
+            padding: 20px;
+        }
+    }
+
+    .formRow {
+        display: block;
+
+        > label,
+        > span {
+            display: block;
+        }
+
+        > label {
+            padding: 0;
+        }
+
+        > span {
+            padding: 0 0 10px 0;
+        }
+    }
+
+    .main-intro {
+        .stickerForm {
+            display: block;
+            margin: 20px 0 0 0;
+        }
+
+        input {
+            max-width: 100%;
+        }
+    }
+
+    .racecar {
+        animation-duration: 12s;
+    }
+
+    @keyframes victoryLap {
+        0% {
+            opacity: 0;
+            left: -50px;
+        }
+        2%,
+        98% {
+            opacity: 1;
+        }
+        40%,
+        60% {
+            left: 300px;
+        }
+        to {
+            opacity: 0;
+            left: 700px;
+        }
+    }
 }
 </style>
