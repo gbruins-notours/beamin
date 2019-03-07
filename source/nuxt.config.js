@@ -1,9 +1,8 @@
-const path = require('path')
-const pkg = require('./package');
+const path = require('path');
 
 if (process.env.NODE_ENV === 'development') {
     require('dotenv').config({
-        path: path.resolve(__dirname, '../.env')
+        path: path.resolve(__dirname, './.env')
     });
 }
 
@@ -11,42 +10,56 @@ module.exports = {
     mode: 'universal',
 
     /*
-    ** Headers of the page
-    */
+     ** Headers of the page
+     */
     head: {
         title: 'GMNST',
-        meta: [
-            { charset: 'utf-8' },
-            { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-            { hid: 'description', name: 'description', content: "Gymnastics Lifestyle apparel" }
+        meta: [{
+                charset: 'utf-8'
+            },
+            {
+                name: 'viewport',
+                content: 'width=device-width, initial-scale=1'
+            },
+            {
+                hid: 'description',
+                name: 'description',
+                content: 'Gymnastics Lifestyle apparel'
+            }
         ],
-        link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+        link: [{
+            rel: 'icon',
+            type: 'image/x-icon',
+            href: '/favicon.ico'
+        }]
     },
 
     /*
-    ** Customize the progress-bar color
-    */
-    loading: { color: '#fff' },
+     ** Customize the progress-bar color
+     */
+    loading: {
+        color: '#fff'
+    },
 
     /*
-    ** Global CSS
-    */
+     ** Global CSS
+     */
     css: [
         'element-ui/lib/theme-chalk/index.css',
         '@/assets/css/base.scss'
     ],
 
     /*
-    ** Plugins to load before mounting the App
-    */
+     ** Plugins to load before mounting the App
+     */
     plugins: [
         '@/plugins/element-ui',
         '@/plugins/i18n.js'
     ],
 
     /*
-    ** Nuxt.js modules
-    */
+     ** Nuxt.js modules
+     */
     modules: [
         // Doc: https://axios.nuxtjs.org/usage
         '@nuxtjs/axios',
@@ -79,8 +92,8 @@ module.exports = {
     },
 
     /*
-    ** Axios module configuration
-    */
+     ** Axios module configuration
+     */
     axios: {
         // See https://github.com/nuxt-community/axios-module#options
     },
@@ -90,14 +103,14 @@ module.exports = {
     },
 
     /*
-    ** Build configuration
-    */
+     ** Build configuration
+     */
     build: {
         transpile: [/^element-ui/],
 
         /*
-        ** You can extend webpack config here
-        */
+         ** You can extend webpack config here
+         */
         extend(config, ctx) {
             // Run ESLint on save
             if (ctx.isDev && ctx.isClient) {
@@ -106,7 +119,7 @@ module.exports = {
                     test: /\.(js|vue)$/,
                     loader: 'eslint-loader',
                     exclude: /(node_modules)/
-                })
+                });
             }
         }
     },
@@ -115,4 +128,4 @@ module.exports = {
         name: 'fade',
         mode: 'out-in'
     }
-}
+};

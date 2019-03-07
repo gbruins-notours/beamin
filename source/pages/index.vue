@@ -42,7 +42,11 @@ export default {
         };
     },
 
-    created: async function() {
+    // NOTE:
+    // signining into Firebase on the 'created' lifecycle hooks
+    // causes 'nuxt generate' to fail.  I guess this needs to be
+    // done on the 'mounted' hook
+    mounted: async function() {
         await this.signIn();
     },
 
@@ -77,14 +81,20 @@ export default {
         //     });
         // },
 
-        async signIn() {
-            try {
-                this.anonymousUser = await this.$fireAuth.signInAnonymously();
-                return;
-            } catch (error) {
-                console.error(error);
-                this.anonymousUser = null;
-            }
+        signIn() {
+            return new Promise((resolve, reject) => {
+                this.$fireAuth.signInAnonymously().then(
+                    (user) => {
+                        this.anonymousUser = user;
+                        resolve(user);
+                    },
+                    (error) => {
+                        this.anonymousUser = null;
+                        console.error(error);
+                        reject(error);
+                    }
+                );
+            });
         },
 
         async writeToFirestore() {
